@@ -57,7 +57,7 @@ export default function PlanPage() {
         }).toString();
 
         const res = await fetch(
-          "https://google-maps-night-planner.onrender.com/api/places?${params}"
+          `fetch("https://google-maps-night-planner.onrender.com/api/places?${params}")`
         );
         const data = await res.json();
         setVenues(data);
