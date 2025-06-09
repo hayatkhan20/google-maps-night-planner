@@ -2,13 +2,14 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+
+// =============== GEO SEARCH ===============
 
 // Geocode City → Lat/Lng
 async function geocodeCity(city) {
@@ -29,7 +30,6 @@ async function geocodeCity(city) {
 // Places Nearby Search (Bars & Restaurants)
 async function searchPlaces({ lat, lng }, typeOfPeople, numLocations) {
   const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json`;
-  // Type logic: "families" = restaurant only; else both
   let type = "restaurant";
   if (typeOfPeople === "singles" || typeOfPeople === "couples") {
     type = "bar|restaurant";
@@ -44,14 +44,12 @@ async function searchPlaces({ lat, lng }, typeOfPeople, numLocations) {
   });
   let results = response.data.results;
 
-  // Filter out bars if typeOfPeople is "families"
   if (typeOfPeople === "families") {
     results = results.filter(place =>
       place.types && place.types.includes("restaurant") && !place.types.includes("bar")
     );
   }
 
-  // Limit to numLocations if specified
   if (numLocations && Number(numLocations) > 0) {
     results = results.slice(0, Number(numLocations));
   }
@@ -65,12 +63,9 @@ app.get("/api/places", async (req, res) => {
     const { city, typeOfPeople, numLocations } = req.query;
     if (!city) return res.status(400).json({ error: "City required" });
 
-    // 1. Geocode city
     const loc = await geocodeCity(city + ", Canada");
-    // 2. Search places
     const places = await searchPlaces(loc, typeOfPeople, numLocations);
 
-    // Return only the data you need for frontend
     res.json(
       places.map((place) => ({
         name: place.name,
@@ -92,10 +87,11 @@ app.get("/api/places", async (req, res) => {
   }
 });
 
-// === STRIPE PAYMENT: Create Checkout Session ===
+// =============== SQUARE CHECKOUT ===============
+
 app.post("/api/create-checkout-session", async (req, res) => {
-  console.log('Received order:', req.body);
   const { orderItems, user, crawlInfo, venues } = req.body;
+
   function colorCodeToName(code) {
     if (code === "#232323") return "Black";
     if (code === "#ff0000") return "Red";
@@ -103,57 +99,59 @@ app.post("/api/create-checkout-session", async (req, res) => {
     return "Black";
   }
 
+  const lineItems = orderItems.map(item => ({
+    name: `${item.type === "tshirt" ? "T-Shirt" : item.type === "tanktop" ? "Tank Top" : "Hat"} - ${venues?.[0]?.name || "Pub Crawl"}`,
+    quantity: item.quantity.toString(),
+    base_price_money: {
+      amount: 2499, // $24.99 in cents
+      currency: "CAD"
+    },
+    note: `Color: ${colorCodeToName(item.color)}, Size: ${item.size}`
+  }));
 
   try {
-    // 1. Build line_items array from orderItems
-    const line_items = orderItems.map(item => ({
-      price_data: {
-        currency: "usd",
-        product_data: {
-          name: `${item.type === "tshirt" ? "T-Shirt" : item.type === "tanktop" ? "Tank Top" : "Hat"} - ${venues?.[0]?.name || "Pub Crawl"}`,
-          description: `Color: ${colorCodeToName(item.color)}, Size: ${item.size}`,
-          images: [
-            item.image?.startsWith("http")
-              ? item.image
-              : `https://yourdomain.com${item.image || "/default.png"}`
-          ],
-        },
-        unit_amount: 2499, // $24.99 in centss
+    const idempotencyKey = `${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
+    const body = {
+      idempotency_key: idempotencyKey,
+      order: {
+        location_id: process.env.SQUARE_LOCATION_ID,
+        line_items: lineItems
       },
-      quantity: item.quantity,
-    }));
+      checkout_options: {
+        ask_for_shipping_address: true,
+        redirect_url: process.env.SQUARE_REDIRECT_URL || "https://google-maps-night-planner-frontend.onrender.com/success"
+      }
+    };
 
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      mode: "payment",
-      line_items,
-      customer_email: user.email,
-      shipping_address_collection: {
-        allowed_countries: ["US", "CA"],
-      },
-      
-      success_url: "https://google-maps-night-planner-frontend.onrender.com/success",
-      cancel_url: "https://google-maps-night-planner-frontend.onrender.com/order",
+    const isProd = (process.env.SQUARE_ENVIRONMENT || '').toLowerCase() === 'production';
+    const apiBase = isProd
+      ? 'https://connect.squareup.com'
+      : 'https://connect.squareupsandbox.com';
 
-      metadata: {
-        city: crawlInfo?.city || "",
-        date: crawlInfo?.date || "",
-        startTime: crawlInfo?.startTime || "",
-        endTime: crawlInfo?.endTime || "",
-        typeOfPeople: crawlInfo?.typeOfPeople || "",
-        numLocations: crawlInfo?.numLocations?.toString() || "",
-        venue1: venues?.[0]?.name || "", // Just the first venue, or
-        partyName: user.partyName,
-        userName: user.userName,
-        phone: user.phone,
-        address: user.address,
-      },
-    });
+    const response = await axios.post(
+      `${apiBase}/v2/online-checkout/payment-links`,
+      body,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.SQUARE_ACCESS_TOKEN}`,
+          'Square-Version': '2024-05-22'
+        }
+      }
+    );
 
-    res.json({ url: session.url });
+    // THIS is always the real, customer-facing payment link!
+    const paymentUrl = response.data.payment_link.url;
+    console.log('Payment link for customer:', paymentUrl);
+
+    res.json({ url: paymentUrl });
+
   } catch (err) {
-    console.error('Stripe error:', err);
-    res.status(500).json({ error: err.message });
+    let errorDetail = err.response?.data?.errors
+      ? err.response.data.errors.map(e => e.detail).join("; ")
+      : err.response?.data || err.message || "Square checkout error";
+    console.error("Square error:", errorDetail);
+    res.status(500).json({ error: errorDetail });
   }
 });
 
