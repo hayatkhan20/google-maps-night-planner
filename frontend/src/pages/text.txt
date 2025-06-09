@@ -1,0 +1,15 @@
+Now provide the source code review page.
+Review Page must Shows:
+
+Map with yellow path and venue markers (the bar crawl route)
+
+List of venues with times, type (single/couple/family)
+
+Star ratings (fixed, "★" per rating, UTF-8 everywhere)
+
+Summary of shirt order, shipping info, etc.
+
+Buttons:
+“Download Pub Crawl Map” (PDF of summary page)
+“Print” (opens browser print dialog)
+“Proceed to Payment” (Stripe checkout)

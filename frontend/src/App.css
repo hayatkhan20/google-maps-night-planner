@@ -1,0 +1,35 @@
+html, body, #root, * {
+  font-family:
+    'Poppins',
+    'Segoe UI Emoji',
+    'Segoe UI Symbol',
+    'Apple Color Emoji',
+    'Noto Color Emoji',
+    Arial,
+    sans-serif !important;
+}
+
+body, #root {
+  background: #000 !important;
+  color: #fff !important;
+  min-height: 100vh;
+}
+
+a {
+  color: #ff7c2a !important;
+}
+
+.MuiPaper-root, .MuiBox-root, .MuiTypography-root {
+  background-color: transparent !important;
+  color: #fff !important;
+}
+
+input, textarea, .MuiInputBase-root {
+  color: #fff !important;
+  background: #181818 !important;
+  border-radius: 4px !important;
+}
+
+label, .MuiFormLabel-root {
+  color: #bbb !important;
+}
