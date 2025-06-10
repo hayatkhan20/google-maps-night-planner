@@ -19,7 +19,7 @@ const HAT_COLORS = [
   { code: "##FFC0CB", name: "Pink" }
 ];
 const SIZES = ["S", "M", "L", "XL", "XXL", "XXXL"];
-const SHIRT_PRICE = 24.99;
+const SHIRT_PRICE = 1;
 
 const ITEM_TYPES = [
   { value: "tshirt", label: "T-Shirt" },
