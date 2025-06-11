@@ -254,7 +254,7 @@ export default function ReviewPage() {
             <Typography>Color: <b style={{ color: "#ff7c2a" }}>{item.colorName}</b></Typography>
             <Typography>Size: <b style={{ color: "#ff7c2a" }}>{item.size}</b></Typography>
             <Typography>Quantity: <b style={{ color: "#ff7c2a" }}>{item.quantity}</b></Typography>
-            <Typography>Subtotal: <b style={{ color: "#ffd700" }}>${(24.99 * (item.quantity || 1)).toFixed(2)}</b></Typography>
+            <Typography>Subtotal: <b style={{ color: "#ffd700" }}>${(1 * (item.quantity || 1)).toFixed(2)}</b></Typography>
           </Box>
         </Box>
       ))
@@ -267,7 +267,7 @@ export default function ReviewPage() {
       >
         Total: $
         {orderItems
-          .reduce((acc, item) => acc + 24.99 * (item.quantity || 1), 0)
+          .reduce((acc, item) => acc + 1 * (item.quantity || 1), 0)
           .toFixed(2)}
       </Typography>
     )}
