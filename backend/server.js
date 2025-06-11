@@ -103,7 +103,7 @@ app.post("/api/create-checkout-session", async (req, res) => {
     name: `${item.type === "tshirt" ? "T-Shirt" : item.type === "tanktop" ? "Tank Top" : "Hat"} - ${venues?.[0]?.name || "Pub Crawl"}`,
     quantity: item.quantity.toString(),
     base_price_money: {
-      amount: 2499, // $24.99 in cents
+      amount: 100, // $24.99 in cents
       currency: "CAD"
     },
     note: `Color: ${colorCodeToName(item.color)}, Size: ${item.size}`
