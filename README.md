@@ -1,4 +1,3 @@
-```markdown
 # 🎆 Canada Day Night Planner App
 
 A full-stack web application built with **React**, **Express.js**, **Stripe**, and **Google Maps JavaScript API** to help users **plan custom night routes**, **order event merchandise**, and **download their plans** — all in one seamless flow.
@@ -57,8 +56,6 @@ A full-stack web application built with **React**, **Express.js**, **Stripe**, a
 ---
 
 ## 📂 Folder Structure
-
-```
 
 google-maps-night-planner/
 ├── backend/           # Express.js backend
@@ -125,7 +122,7 @@ FRONTEND_URL=http://localhost:5173
 
 **Hayat Ullah Abid**
 [GitHub](https://github.com/hayatkhan20)
-[LinkedIn](https://www.linkedin.com/in/hayatullahabid)
+[LinkedIn](https://www.linkedin.com/in/hayat-ullah-abid)
 
 ---
 
