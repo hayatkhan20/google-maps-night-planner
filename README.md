@@ -1,21 +1,27 @@
-# Canada Day Night Planner App 🎆
+```markdown
+# 🎆 Canada Day Night Planner App
 
-A full-stack web application built using **React**, **Express.js**, **Google Maps JavaScript API**, and **Stripe**, designed to help users plan Canada Day night venue routes, customize and purchase event merchandise, and download their final plan — all in one seamless flow.
+A full-stack web application built with **React**, **Express.js**, **Stripe**, and **Google Maps JavaScript API** to help users **plan custom night routes**, **order event merchandise**, and **download their plans** — all in one seamless flow.
 
 🌐 **Live App:** [Launch the Planner](https://google-maps-night-planner-frontend.onrender.com/)
+
+![React](https://img.shields.io/badge/Frontend-React-blue)
+![Express](https://img.shields.io/badge/Backend-Express.js-lightgrey)
+![Stripe](https://img.shields.io/badge/Payment-Stripe-blueviolet)
+![Google Maps](https://img.shields.io/badge/Maps-GoogleMaps-brightgreen)
+![Hosting](https://img.shields.io/badge/Deployed-Render-green)
 
 ---
 
 ## 🧭 Key Features
 
-- **Smart City Detection:** Auto-detect or manually select the city via Google Places Autocomplete.
-- **Venue Routing:** Users pick venue count, time range, and type (Singles, Couples, Family). Optimized route shown on an interactive map with polyline.
-- **Dynamic Product Customization:**
-  - T-shirts, Tank tops, Hats with live color previews.
-  - Size selection (S to XXXL), quantity tracking, and live order summary.
-- **Stripe Checkout Integration:** Secure multi-product checkout with shipping & contact info collected via Stripe UI.
-- **Review & Download Plan:** Users review full crawl plan + products and download a copy before payment.
-- **Mobile Friendly:** Fully responsive UI using Material UI.
+- 🌆 **Smart City Detection** with Google Places API.
+- 🗺️ **Dynamic Venue Routing** with time, category, and count.
+- 👕 **Product Customization** (T-Shirts, Tank Tops, Hats) with color, size & quantity.
+- 🛒 **Cart Preview** and live total updates.
+- 💳 **Stripe Checkout Integration** with metadata tracking.
+- 📄 **Downloadable Plan Summary** before checkout.
+- 📱 **Responsive UI** built with Material UI and React Hooks.
 
 ---
 
@@ -33,29 +39,103 @@ A full-stack web application built using **React**, **Express.js**, **Google Map
 ### ✅ Final Review Before Checkout
 ![Review Page](frontend/SS/Review.PNG)
 
-### 💳 Secure Payment via Stripe
+### 💳 Stripe Checkout
 ![Stripe Payment](frontend/SS/Stripe.jpg)
 
 ---
 
 ## 🛠 Tech Stack
 
-| Layer        | Tech                     |
-|--------------|--------------------------|
-| Frontend     | React.js, Material UI    |
-| Backend      | Express.js (Node.js)     |
-| Mapping      | Google Maps JavaScript API, Places API |
-| Payment      | Stripe Checkout          |
-| Hosting      | Render (Frontend & Backend) |
+| Layer     | Technologies                         |
+|-----------|--------------------------------------|
+| Frontend  | React.js, Vite, Material UI          |
+| Backend   | Express.js (Node.js)                 |
+| Maps      | Google Maps JavaScript API, Places API |
+| Payment   | Stripe Checkout                      |
+| Hosting   | Render (Frontend & Backend)          |
 
 ---
 
 ## 📂 Folder Structure
+
+```
+
 google-maps-night-planner/
-├── backend/ # Express.js backend
-│ └── server.js
-├── frontend/ # React frontend
-│ └── SS/ # Screenshots
-│ └── pages/
-│ └── components/
+├── backend/           # Express.js backend
+│   └── server.js
+├── frontend/          # React frontend
+│   └── SS/            # Screenshots
+│   └── pages/
+│   └── components/
 └── README.md
+
+````
+
+---
+
+## ⚙️ Local Setup Instructions
+
+1. **Clone Repository**
+
+```bash
+git clone https://github.com/hayatkhan20/google-maps-night-planner.git
+cd google-maps-night-planner
+````
+
+2. **Install Frontend**
+
+```bash
+cd frontend
+npm install
+```
+
+3. **Install Backend**
+
+```bash
+cd ../backend
+npm install
+```
+
+4. **Run App Locally**
+
+```bash
+# In one terminal (backend)
+cd backend
+node server.js
+
+# In another terminal (frontend)
+cd frontend
+npm run dev
+```
+
+---
+
+## 🔐 Environment Variables
+
+Create a `.env` file in `/backend`:
+
+```env
+STRIPE_SECRET_KEY=sk_test_******************
+FRONTEND_URL=http://localhost:5173
+```
+
+---
+
+## 👨‍💻 Developer
+
+**Hayat Ullah Abid**
+[GitHub](https://github.com/hayatkhan20)
+[LinkedIn](https://www.linkedin.com/in/hayatullahabid)
+
+---
+
+## 📝 License
+
+This project is open-sourced under the [MIT License](LICENSE).
+
+```
+
+---
+
+Let me know if you want a `.md` file download or additions like deployment instructions for Render.
+```
