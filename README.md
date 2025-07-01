@@ -51,4 +51,11 @@ A full-stack web application built using **React**, **Express.js**, **Google Map
 ---
 
 ## 📂 Folder Structure
-
+google-maps-night-planner/
+├── backend/ # Express.js backend
+│ └── server.js
+├── frontend/ # React frontend
+│ └── SS/ # Screenshots
+│ └── pages/
+│ └── components/
+└── README.md
